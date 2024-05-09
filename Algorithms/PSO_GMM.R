@@ -136,23 +136,23 @@ population_matrix <- initial_population_matrix
 ##############################   show result   #################################
 result_matrix <- matrix(ncol = 2,nrow = generation)
 
-# PSO算法的主循环
+# PSO MAIN FUNCTION
 for (gen in 1:generation) {
   for (i in 1:size) {
-    # 更新个体位置
+    # update individual position
     population_matrix[i,] <- round(population_matrix[i,] + velocities[i,])
     
-    # 计算当前个体的适应度
+    # get fitness for every individual
     fitness <- get_fitness(population_matrix[i,], DEG_list, seurat_object,toprange,dim,certainty)
     
-    # 更新个人最优解
+    # update individual best fitness
     if (fitness > pBest_fitness[i]) {
       pBest_fitness[i] <- fitness
       pBest[i,] <- population_matrix[i,]
     }
     
-    # 更新全局最优解
-    if (fitness < gBest_fitness) {
+    # update globle best fitness
+    if (fitness > gBest_fitness) {
       gBest_fitness <- fitness
       gBest <- population_matrix[i,]
     }
@@ -165,14 +165,11 @@ for (gen in 1:generation) {
   velocities[velocities > vmax] <- vmax
   velocities[velocities < (-vmax)] <- (-vmax)
 
-  
-  # 打印当前代数和全局最优适应度
   cat("Generation:", gen, " gBestFitness:", gBest_fitness, "\n")
   result_matrix[gen,] <- c(gen,gBest_fitness)
   return(result_matrix)
 }
 
-# 输出全局最优解
 cat("Global Best Solution:\n")
 print(gBest)
 cat("Global Best Fitness:\n")
