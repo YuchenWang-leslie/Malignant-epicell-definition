@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
 
 
 import random
@@ -19,16 +15,10 @@ from sklearn.mixture import GaussianMixture
 from sklearn.metrics import silhouette_score
 
 
-# In[ ]:
-
-
 #improt a anndata object and a favorabel Differencial Expression Genes list
 DEG = pd.read_csv('./DEG_new.csv',sep=',')
 adata = anndata.read_h5ad("/home/liujingyue/wyc_20231021/single_cell_SEQ/project/chemotherapy/epicell.h5ad")
 lenDEG=len(DEG)
-
-
-# In[ ]:
 
 
 length=100
@@ -39,9 +29,6 @@ crossr=0.8
 mutater=0.1
 generation=5
 elitenumber=2
-
-
-# In[ ]:
 
 
 def getweights(lenDEG):
@@ -58,9 +45,6 @@ def getweights(lenDEG):
     weight1=probabilities[mean:]
     weight2=probabilities[:mean]
     return weight1, weight2
-
-
-# In[ ]:
 
 
 def popinit(length,size,lenDEG,toprange):
@@ -81,10 +65,6 @@ def popinit(length,size,lenDEG,toprange):
         popu.append(chrome)
     
     return popu  #各自从toprange范围内取前500，取值范围内随机抽取50个，两个染色体相加作为一个个体，重复形成种群
-
-
-# In[ ]:
-
 
 def getfitness(adata,popu,length,size,DEG):
     fitness=[]
@@ -131,9 +111,6 @@ def getfitness(adata,popu,length,size,DEG):
     return fitness
 
 
-# In[ ]:
-
-
 def select(popu,fitness,size,elite_index,elite):
     newpopu=popu
     # 先把精英拿出来
@@ -154,9 +131,6 @@ def select(popu,fitness,size,elite_index,elite):
     return newpopu
 
 
-# In[ ]:
-
-
 def crossover(popu,crossr,length):
     newpopu=popu
     for i in range(0, len(popu), 2):
@@ -167,9 +141,6 @@ def crossover(popu,crossr,length):
             newpopu[i]=child1
             newpopu[i+1]=child2
     return newpopu
-
-
-# In[ ]:
 
 
 def mutate(popu,mutater,length,lenDEG):
@@ -195,9 +166,6 @@ def mutate(popu,mutater,length,lenDEG):
     return newpopu
 
 
-# In[ ]:
-
-
 def save_elite(popu,fitness,elitenumber):
     fitness_list = [(value, index) for index, value in enumerate(fitness)]
     fitness_list.sort(reverse=True, key=lambda x: x[0])
@@ -206,9 +174,6 @@ def save_elite(popu,fitness,elitenumber):
     elite = [popu[i] for i in elite_index]
 
     return elite_index,elite
-
-
-# In[ ]:
 
 
 def genetic_algorithm(length,size,DEG,adata,mutater,crossr,generation,lenDEG,toprange,elitenumber):
@@ -264,12 +229,7 @@ def genetic_algorithm(length,size,DEG,adata,mutater,crossr,generation,lenDEG,top
     
     return finalsolution, finalfitness
 
-
-# <h1>主程序
-
-# In[ ]:
-
-
+# 主程序
 finalsolution, finalfitness=genetic_algorithm(length,size,DEG,adata,mutater,crossr,generation,lenDEG,toprange,elitenumber)
 print(f"最好的基因选择list：{finalsolution},最好的silouette：{finalfitness}")
 
